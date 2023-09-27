@@ -1,5 +1,20 @@
 <?php
-require('config.php')
+require('config.php');
+
+$limit = 3;
+if(isset($_GET['page'])){
+  
+  $getpgno = $_GET['page'];
+}else{
+  $getpgno = 1;
+}
+$offset = ($getpgno - 1) * $limit;
+
+$fetch = "SELECT * FROM `pro` limit {$offset}, {$limit}";
+
+$query = mysqli_query($connection, $fetch);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,31 +142,21 @@ require('config.php')
     <section class="ftco-section">
     	<div class="container">
         <div class="row">
-			<?php 
-			$fetch = "SELECT * FROM `pro`";
-			$query = mysqli_query($connection , $fetch);
-			if(mysqli_num_rows($query) > 0 ){
-			while ($row = mysqli_fetch_assoc($query)) {
-				?>
-        	
         	<div class="col-md-6">
         		<h3 class="mb-5 heading-pricing ftco-animate">Desserts</h3>
         		<div class="pricing-entry d-flex ftco-animate">
-        			<div class="img" style="background-image: url(<?php echo 'images/ '. $row ['image'] ?>);"></div>
+        			<div class="img" style="background-image: url();"></div>
         			<div class="desc pl-3">
 	        			<div class="d-flex text align-items-center">
-	        				<h3><span><?php echo $row ['title'] ?></span></h3>
-	        				<span class="price"><?php echo $row ['price'] ?></span>
+	        				<h3><span></span></h3>
+	        				<span class="price"></span>
 	        			</div>
 	        			<div class="d-block">
-	        				<p><?php echo $row ['des'] ?></p>
+	        				<p></p>
 	        			</div>
         			</div>
         		</div>
-				<?php
-				}
-				}
-				?>
+				
         		<div class="pricing-entry d-flex ftco-animate">
         			<div class="img" style="background-image: url(images/dessert-2.jpg);"></div>
         			<div class="desc pl-3">
@@ -247,13 +252,13 @@ require('config.php')
 
     <section class="ftco-menu mb-5 pb-5">
     	<div class="container">
-    		<div class="row justify-content-center mb-5">
+    		<!-- <div class="row justify-content-center mb-5">
           <div class="col-md-7 heading-section text-center ftco-animate">
           	<span class="subheading">Discover</span>
             <h2 class="mb-4">Our Products</h2>
             <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
           </div>
-        </div>
+        </div> -->
     		<div class="row d-md-flex">
 	    		<div class="col-lg-12 ftco-animate p-md-5">
 		    		<div class="row">
@@ -264,7 +269,7 @@ require('config.php')
 
 		              <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">Desserts</a>
 		            </div>
-		          </div>
+		          </div> 
 		          <div class="col-md-12 d-flex align-items-center">
 		            
 		            <div class="tab-content ftco-animate" id="v-pills-tabContent">
@@ -274,14 +279,14 @@ require('config.php')
 		              <div class="tab-pane fade show active" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
 		                <div class="row">
 							<?php
-							$fetch = "SELECT * FROM `pro`";
+							$fetch = "SELECT * FROM `pro` limit {$offset}, {$limit}";
 							$query = mysqli_query($connection , $fetch);
 							if(mysqli_num_rows($query) > 0 ){
 								while ($row = mysqli_fetch_assoc($query)) {
 
 							?>
 		              		<div class="col-md-4 text-center">
-		              			<div class="menu-wrap">
+		              			<div class="menu-wrap text-center">
 		              				<a href="#" class="menu-img img mb-4" style="background-image: url(<?php echo 'images/' . $row ['image'] ?> );"></a>
 		              				<div class="text">
 		              					<h3><a href="#"> <?php echo $row ['title'] ?> </a></h3>
@@ -293,9 +298,36 @@ require('config.php')
 		              		</div>
 							<?php 
 							}
-						}
+							}
+							$fetchpage = "SELECT * from pro"; 
+							$query = mysqli_query($connection, $fetchpage);
+							  if(mysqli_num_rows($query) > 0){
+								 $totalRecords = mysqli_num_rows($query);
+								 $totalpages = ceil($totalRecords / $limit);
+								 echo '<ul class="pagination ">';
+								 if($getpgno > 1){
+									echo '<li class="page-item"><a class="page-link btn btn-primary btn-outline-primary" href="menu.php?page='.($getpgno - 1).'">prev</a></li>';
+								 }
+								 for($i = 1; $i <= $totalpages; $i++){
+									 $active = $i == $getpgno? "active" : "";
+									 echo '<li class="'.$active.' page-item"><a class="page-link btn btn-primary btn-outline-primary" href="menu.php?page='.$i.'">'.$i.'</a></li>';
+									}
+									if($getpgno < $totalpages){
+										echo '<li class="page-item"><a class="page-link btn btn-primary btn-outline-primary" href="menu.php?page='.($getpgno + 1).'">next</a></li>';
+									}
+								}
 						?>
-		              		<!-- <div class="col-md-4 text-center">
+					
+    <section class="ftco-menu mb-5 pb-5">
+    	<div class="container">
+    		<div class="row justify-content-center mb-5">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+          	<span class="subheading">Discover</span>
+            <h2 class="mb-4">Our Products</h2>
+            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+           </div> 
+         </div> 
+		 <!-- <div class="col-md-4 text-center"> 
 		              			<div class="menu-wrap">
 		              				<a href="#" class="menu-img img mb-4" style="background-image: url(images/drink-2.jpg);"></a>
 		              				<div class="text">
@@ -422,7 +454,7 @@ require('config.php')
 		              			</div>
 		              		</div>
 		              	</div>
-		              </div> -->
+		              </div>  -->
 		            </div>
 		          </div>
 		        </div>
